@@ -16,6 +16,7 @@
   "dependencies": {
     "zustand": "catalog:",
     "react": "catalog:",
+    "@repo/schemas": "workspace:*",
     "react-dom": "catalog:"
   }
 }
