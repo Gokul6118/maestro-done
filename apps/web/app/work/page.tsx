@@ -175,7 +175,11 @@ export default function WorkPage() {
 			});
 		}
 
-		if (action === "add" || action === "edit") {
+		if (
+			(action === "add" || action === "edit") &&
+			payload &&
+			typeof payload !== "number"
+		) {
 			processSubmit(payload);
 		}
 

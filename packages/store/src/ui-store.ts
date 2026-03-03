@@ -1,15 +1,18 @@
+import type { TodoForm } from "@repo/schemas";
 import { create } from "zustand";
+
+/* ================= TYPES ================= */
 
 export interface Todo {
 	description: string;
 	endAt: string;
 	id: number;
-
 	startAt: string;
-
 	status: "todo" | "backlog" | "inprogress" | "done" | "cancelled";
 	text: string;
 }
+
+type ConfirmPayload = TodoForm | number | null;
 
 export interface UIStore {
 	activeTodo: Todo | null;
@@ -22,7 +25,7 @@ export interface UIStore {
 	confirm: {
 		open: boolean;
 		action: "add" | "edit" | "delete" | null;
-		payload?: Todo | null;
+		payload: ConfirmPayload;
 	};
 
 	descOpen: boolean;
@@ -32,7 +35,7 @@ export interface UIStore {
 
 	openConfirm: (
 		action: "add" | "edit" | "delete",
-		payload?: Todo | null
+		payload?: ConfirmPayload
 	) => void;
 
 	openDesc: (todo: Todo) => void;
@@ -41,6 +44,8 @@ export interface UIStore {
 	setExpandedId: (id: number | null) => void;
 	sheetOpen: boolean;
 }
+
+/* ================= STORE ================= */
 
 export const useUIStore = create<UIStore>((set) => ({
 	sheetOpen: false,
@@ -60,7 +65,7 @@ export const useUIStore = create<UIStore>((set) => ({
 	clearEditTodo: () =>
 		set({
 			editTodo: null,
-			sheetOpen: false, // ✅ reset sheet also
+			sheetOpen: false,
 		}),
 
 	expandedId: null,
@@ -73,7 +78,7 @@ export const useUIStore = create<UIStore>((set) => ({
 		payload: null,
 	},
 
-	openConfirm: (action, payload) =>
+	openConfirm: (action, payload = null) =>
 		set({
 			confirm: {
 				open: true,
