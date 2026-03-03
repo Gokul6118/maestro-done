@@ -48,3 +48,13 @@ export const todoFormSchema = z
 	});
 
 export type TodoForm = z.infer<typeof todoFormSchema>;
+export const todoSchema = z.object({
+	id: z.number(),
+	text: z.string(),
+	description: z.string(),
+	status: z.enum(["todo", "backlog", "inprogress", "done", "cancelled"]),
+	startAt: z.string(),
+	endAt: z.string(),
+});
+
+export type Todo = z.infer<typeof todoSchema>;

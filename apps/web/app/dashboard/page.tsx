@@ -1,5 +1,6 @@
 "use client";
 
+import type { Todo } from "@repo/schemas";
 import {
 	SidebarInset,
 	SidebarProvider,
@@ -10,28 +11,17 @@ import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
-
 import { todoApi } from "../../lib/api-client";
-
 /* ================= TYPES ================= */
 
-interface Todo {
-	id: number;
-	startAt: string;
-	status: "todo" | "backlog" | "inprogress" | "done" | "cancelled";
-	text: string;
-}
+/* ================= PAGE ================= */
 
 export default function Page() {
 	const _router = useRouter();
 
-	const {
-		data: todos = [],
-		isLoading,
-		error,
-	} = todoApi.useQuery("get", "/api");
+	const { data, isLoading, error } = todoApi.useQuery("get", "/api");
 
-	/* ================= LOADING ================= */
+	const todos = (data ?? []) as Todo[];
 
 	if (isLoading) {
 		return <div className="p-6 text-center">Loading dashboard...</div>;
@@ -53,15 +43,12 @@ export default function Page() {
 
 	const tableData = todos.map((t) => ({
 		id: t.id,
-
 		header: t.text,
-		description: t.description,
-
+		description: t.description ?? "No description",
 		type: "Task",
 		status: t.status,
-
-		target: new Date(t.startAt).toLocaleDateString(),
-		limit: new Date(t.endAt).toLocaleDateString(),
+		target: t.startAt ? new Date(t.startAt).toLocaleDateString() : "-",
+		limit: t.endAt ? new Date(t.endAt).toLocaleDateString() : "-",
 	}));
 
 	/* ================= UI ================= */
