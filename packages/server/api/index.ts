@@ -73,34 +73,43 @@ app.use("*", async (c, next) => {
 
 	console.log("🔐 Auth Middleware Triggered for:", path);
 
-	// ✅ SKIP AUTH FOR AUTH ROUTES
+	/* Public routes that should bypass auth */
 	if (
-		path.startsWith("/api/auth") ||
-		path === "/api/openapi" ||
-		path === "/api/docs"
+		path.startsWith("/auth") ||
+		path === "/openapi" ||
+		path === "/docs" ||
+		path === "/test-db"
 	) {
 		console.log("⏭ Skipping Auth for public route");
 		return next();
 	}
 
-	const headers = new Headers();
-	c.req.raw.headers.forEach((value, key) => {
-		headers.set(key, value);
-	});
+	try {
+		/* Forward request headers to auth system */
+		const headers = new Headers();
 
-	const session = await auth.api.getSession({ headers });
+		c.req.raw.headers.forEach((value, key) => {
+			headers.set(key, value);
+		});
 
-	console.log("🧾 Session:", session);
+		const session = await auth.api.getSession({ headers });
 
-	if (!session?.user) {
-		console.log("❌ No session found. Unauthorized.");
-		return c.json({ message: "Login required" }, 401);
+		console.log("🧾 Session:", session);
+
+		if (!session?.user) {
+			console.log("❌ Unauthorized request");
+			return c.json({ message: "Login required" }, 401);
+		}
+
+		/* Store userId in context */
+		c.set("userId", session.user.id);
+
+		await next();
+	} catch (err) {
+		console.error("❌ Auth middleware error:", err);
+		return c.json({ message: "Authentication failed" }, 500);
 	}
-
-	c.set("userId", session.user.id);
-	await next();
 });
-/* ================= AUTH ROUTES ================= */
 
 app.all("/auth/*", async (c) => {
 	console.log("🔑 Auth Route Hit:", c.req.path);
