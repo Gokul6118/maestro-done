@@ -33,7 +33,6 @@ export const auth = betterAuth({
 		"http://localhost:3001",
 		"http://192.168.1.18:3000",
 		"https://maestro-done-web-ondx.vercel.app/",
-
 		"https://maestro-done-web-zwcz.vercel.app/",
 		"coolapp://",
 		"exp://",
