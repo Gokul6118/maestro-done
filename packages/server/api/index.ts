@@ -52,7 +52,7 @@ app.use(
 			"http://localhost:3001",
 			"http://localhost:5173",
 			"http://192.168.1.18:3000",
-
+			"https://maestro-done-web-ondx.vercel.app",
 			"https://maestro-done-web-zwcz.vercel.app",
 		],
 		credentials: true,
