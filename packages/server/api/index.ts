@@ -72,7 +72,6 @@ app.use("*", async (c, next) => {
 
 	console.log("🔐 Auth Middleware Triggered for:", path);
 
-	/* Public routes that should bypass auth */
 	if (
 		path.startsWith("/api/auth") ||
 		path === "/api/openapi" ||
@@ -107,11 +106,10 @@ app.use("*", async (c, next) => {
 	}
 });
 
-app.all("/auth/*", async (c) => {
-	console.log("🔑 Auth Route Hit:", c.req.path);
-	const res = await auth.handler(c.req.raw);
-	console.log("🔑 Auth Handler Response:", res.status);
-	return res;
+app.on(["POST", "GET"], "/auth/*", (c) => {
+	console.log("auth hit");
+	console.log("auth response");
+	return auth.handler(c.req.raw);
 });
 
 /* ================= TEST DB ================= */
