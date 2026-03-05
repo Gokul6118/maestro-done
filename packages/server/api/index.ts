@@ -66,7 +66,6 @@ app.options("*", (c) => {
 	return c.body(null, 204);
 });
 
-/* ================= AUTH MIDDLEWARE ================= */
 app.use("*", async (c, next) => {
 	const path = c.req.path;
 
