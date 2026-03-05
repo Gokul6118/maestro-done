@@ -107,12 +107,7 @@ app.use("*", async (c, next) => {
 	}
 });
 
-app.on(["POST", "GET"], "/auth/*", (c) => {
-	console.log("auth hit");
-	console.log("auth response");
-	return auth.handler(c.req.raw);
-});
-
+app.all("/api/auth/*", (c) => auth.handler(c.req.raw));
 /* ================= TEST DB ================= */
 
 app.get("/test-db", async (c) => {
