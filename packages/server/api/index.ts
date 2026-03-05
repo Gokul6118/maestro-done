@@ -66,13 +66,11 @@ app.options("*", (c) => {
 	return c.body(null, 204);
 });
 
-/* ================= AUTH MIDDLEWARE ================= */
 app.use("*", async (c, next) => {
 	const path = c.req.path;
 
 	console.log("🔐 Auth Middleware Triggered for:", path);
 
-	/* Public routes that should bypass auth */
 	if (
 		path.startsWith("/api/auth") ||
 		path === "/api/openapi" ||
